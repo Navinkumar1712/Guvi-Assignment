@@ -1,73 +1,208 @@
-# # #1 Filter function using Lambda
-ages = [{"John":25},
-        {"Alex":15},
-        {"Salim":30},
-        {"Jim":12},
-        {"Arun":14}]
-Under_18 = list(filter(lambda x: list(x.values())[0] < 18, ages))
-print(Under_18)
+class BankAccount:
+    def __init__(self, account_number, balance=0):
+        self.__account_number = account_number
+        self.__balance = balance
 
-#Map function names above 18 years old
-ages = [{"John":25},
-        {"Alex":15},
-        {"Salim":30},
-        {"Jim":12},
-        {"Arun":14}]
-above_18 = list(map(lambda x: list(x.keys())[0], filter(lambda x: list(x.values())[0] > 18, ages)))
-print(above_18)
+    def deposit(self, amount):
+        if amount > 0:
+            self.__balance += amount
+            print(f"Deposited {amount}. New balance: {self.__balance}")
+        else:
+            print("Invalid deposit amount.")
 
+    def withdraw(self, amount):
+        if amount > 0 and amount <= self.__balance:
+            self.__balance -= amount
+            print(f"Withdrew {amount}. New balance: {self.__balance}")
+        else:
+            print("Invalid withdrawal amount or insufficient balance.")
 
-# #2 Reduce function
-from functools import reduce
-numbers = [4,5,8,9,3]
+    def get_balance(self):
+        return self.__balance
 
-product_of_numbers = reduce(lambda x,y: x*y, numbers)
-print (product_of_numbers)
-
+    def get_account_number(self):
+        return self.__account_number
 
 
+class SavingsAccount(BankAccount):
+    def __init__(self, account_number, balance=0, interest_rate=0.01):
+        super().__init__(account_number, balance)
+        self.__interest_rate = interest_rate
 
-#3 Squares of even
-numbers = [3,4,5,2,1,8,9]
-evens = list(filter(lambda x: x%2 == 0, numbers))
-print(evens)
-
-square = evens
-square_of_evens = list(map(lambda x: x**2, square))
-print(square_of_evens)
-
-
+    def calculate_interest(self):
+        interest = self.get_balance() * self.__interest_rate
+        print(f"Interest calculated: {interest}")
+        return interest
 
 
+class CurrentAccount(BankAccount):
+    def __init__(self, account_number, balance=0, minimum_balance=500):
+        super().__init__(account_number, balance)
+        self.__minimum_balance = minimum_balance
+
+    def withdraw(self, amount):
+        if self.get_balance() - amount >= self.__minimum_balance:
+            super().withdraw(amount)
+        else:
+            print("Withdrawal denied. Minimum balance requirement not met.")
 
 
-#4 To check whether the given string is integer
-check_integers = lambda x: x.isdigit()
-Enter_letters_or_number = input("")
-print(check_integers(Enter_letters_or_number))
+# Example usage:
+savings = SavingsAccount("SA1236", 1000)
+savings.deposit(500)
+savings.calculate_interest()
+savings.withdraw(200)
 
-
-
-
-#5 Extract the year, month, and day from a datetime object
-import datetime
-Extract_year_month_date = lambda x: (x.year,x.month,x.day)
-Current_datetime = datetime.datetime.now()
-year, month, day = Extract_year_month_date(Current_datetime)
-
-print("Year", year)
-print("Month", month)
-print("Day", day)
+current = CurrentAccount("CA456", 1000)
+current.withdraw(600)
+current.withdraw(400)
 
 
 
 
-#6 To generate a Fibonacci series up to n term
-from functools import reduce
 
-n = int(input('Enter the Number of terms'))
-def fib(n):
-    return reduce(lambda x, _: x+[x[-1]+x[-2]], range(n-2), [0, 1])
-print(fib(n))
+########Problem 2: Employee Management
+class Employee:
+    def __init__(self, name, salary):
+        self.name = name
+        self.salary = salary
 
+    def calculate_salary(self):
+        return self.salary
+
+
+class RegularEmployee(Employee):
+    def __init__(self, name, salary, bonus):
+        super().__init__(name, salary)
+        self.bonus = bonus
+
+    def calculate_salary(self):
+        return self.salary + self.bonus
+
+
+class ContractEmployee(Employee):
+    def __init__(self, name, hourly_rate, hours_worked):
+        super().__init__(name, 0)
+        self.hourly_rate = hourly_rate
+        self.hours_worked = hours_worked
+
+    def calculate_salary(self):
+        return self.hourly_rate * self.hours_worked
+
+
+class Manager(Employee):
+    def __init__(self, name, salary, team_bonus):
+        super().__init__(name, salary)
+        self.team_bonus = team_bonus
+
+    def calculate_salary(self):
+        return self.salary + self.team_bonus
+class Employee:
+    def __init__(self, name, salary):
+        self.name = name
+        self.salary = salary
+
+    def calculate_salary(self):
+        return self.salary
+
+
+class RegularEmployee(Employee):
+    def __init__(self, name, salary, bonus):
+        super().__init__(name, salary)
+        self.bonus = bonus
+
+    def calculate_salary(self):
+        return self.salary + self.bonus
+
+
+class ContractEmployee(Employee):
+    def __init__(self, name, hourly_rate, hours_worked):
+        super().__init__(name, 0)
+        self.hourly_rate = hourly_rate
+        self.hours_worked = hours_worked
+
+    def calculate_salary(self):
+        return self.hourly_rate * self.hours_worked
+
+
+class Manager(Employee):
+    def __init__(self, name, salary, team_bonus):
+        super().__init__(name, salary)
+        self.team_bonus = team_bonus
+
+    def calculate_salary(self):
+        return self.salary + self.team_bonus
+
+
+if __name__ == "__main__":
+    regular_employee = RegularEmployee("Alice", 50000, 5000)
+    contract_employee = ContractEmployee("Bob", 50, 160)
+    manager = Manager("Charlie", 80000, 10000)
+
+    print(f"{regular_employee.name}'s salary: ${regular_employee.calculate_salary()}")
+    print(f"{contract_employee.name}'s salary: ${contract_employee.calculate_salary()}")
+    print(f"{manager.name}'s salary: ${manager.calculate_salary()}")
+
+
+
+
+#######Problem 3: Vehicle Rental
+class Vehicle:
+    def __init__(self, model, rental_rate):
+        self.model = model
+        self.rental_rate = rental_rate
+
+    def calculate_rental(self, days):
+        return self.rental_rate * days
+
+
+class Car(Vehicle):
+    def __init__(self, model, rental_rate, seating_capacity):
+        super().__init__(model, rental_rate)
+        self.seating_capacity = seating_capacity
+
+    def calculate_rental(self, days):
+        base_cost = self.rental_rate * days
+        additional_charge = 10 * self.seating_capacity * days
+        return base_cost + additional_charge
+
+
+class Bike(Vehicle):
+    def __init__(self, model, rental_rate, bike_type):
+        super().__init__(model, rental_rate)
+        self.bike_type = bike_type
+
+    def calculate_rental(self, days):
+        base_cost = self.rental_rate * days
+        if self.bike_type == "Electric":
+            surcharge = 20 * days
+        else:
+            surcharge = 0
+        return base_cost + surcharge
+
+
+class Truck(Vehicle):
+    def __init__(self, model, rental_rate, cargo_capacity):
+        super().__init__(model, rental_rate)
+        self.cargo_capacity = cargo_capacity
+
+    def calculate_rental(self, days):
+        base_cost = self.rental_rate * days
+        capacity_charge = 50 * self.cargo_capacity * days
+        return base_cost + capacity_charge
+
+
+if __name__ == "__main__":
+    # Create instances of each vehicle type
+    car = Car("Toyota Camry", 50, 5)  # $50/day, 5 seats
+    bike = Bike("Mountain Bike", 20, "Mountain")  # $20/day, Mountain type
+    electric_bike = Bike("Electric Bike", 20, "Electric")  # $20/day, Electric type
+    truck = Truck("Ford F-150", 100, 2)  # $100/day, 2 tons cargo capacity
+
+
+    days = 3
+    print(f"Rental cost for {car.model} for {days} days: ${car.calculate_rental(days)}")
+    print(f"Rental cost for {bike.model} for {days} days: ${bike.calculate_rental(days)}")
+    print(f"Rental cost for {electric_bike.model} for {days} days: ${electric_bike.calculate_rental(days)}")
+    print(f"Rental cost for {truck.model} for {days} days: ${truck.calculate_rental(days)}")
 
